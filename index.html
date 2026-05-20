@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RetraitePlus - Dashboard Anomalies PPC - 2026-05-20</title>
+<style>
+  :root {
+    --c-critical: #ff4d5e;
+    --c-critical-bg: #2a1215;
+    --c-warning: #ff922b;
+    --c-warning-bg: #261500;
+    --c-ok: #40c074;
+    --c-ok-bg: #0d2318;
+    --c-info: #4d9fff;
+    --c-info-bg: #0d1f33;
+    --c-border: #2a2d35;
+    --c-bg: #0d0f14;
+    --c-surface: #161920;
+    --c-text: #e2e8f0;
+    --c-text-muted: #6b7280;
+    --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    --radius: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* --- HEADER --- */
+  .header {
+    background: #1a1a2e;
+    color: white;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #e94560;
+  }
+  .header-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .header-subtitle { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+  .header-meta { text-align: right; font-size: 12px; opacity: 0.7; font-family: var(--font-mono); }
+
+  /* --- TABS --- */
+  .tabs-nav {
+    background: var(--c-surface);
+    border-bottom: 2px solid var(--c-border);
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 12px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--c-text-muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab-btn:hover { color: var(--c-text); }
+  .tab-btn.active {
+    color: var(--c-text);
+    border-bottom-color: #e94560;
+    font-weight: 600;
+  }
+  .tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+  }
+  .badge-critical { background: var(--c-critical); }
+  .badge-warning { background: var(--c-warning); }
+  .badge-ok { background: var(--c-ok); }
+
+  /* --- TAB CONTENT --- */
+  .tab-content { display: none; padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* --- KPI STRIP --- */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .kpi-label { font-size: 11px; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .kpi-value { font-size: 22px; font-weight: 700; font-family: var(--font-mono); }
+  .kpi-sub { font-size: 11px; color: var(--c-text-muted); margin-top: 2px; }
+  .kpi-up { color: var(--c-critical); }
+  .kpi-down { color: var(--c-ok); }
+  .kpi-flat { color: var(--c-text-muted); }
+  .kpi-period { font-size: 11px; color: var(--c-text-muted); margin-bottom: 16px; font-family: var(--font-mono); }
+
+  /* --- ALERT SECTIONS --- */
+  .section { margin-bottom: 20px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-header .count {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0.85;
+  }
+  .section-critical .section-header { background: var(--c-critical); color: white; }
+  .section-warning .section-header { background: var(--c-warning); color: white; }
+  .section-ok .section-header { background: var(--c-ok); color: white; }
+  .section-info .section-header { background: var(--c-info); color: white; }
+  .section-st .section-header { background: #6f42c1; color: white; }
+
+  .section-body {
+    border: 1px solid var(--c-border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    background: var(--c-surface);
+  }
+
+  /* --- ALERT ITEMS --- */
+  .alert-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--c-border);
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 12px;
+    align-items: start;
+  }
+  .alert-item:last-child { border-bottom: none; }
+  .alert-cat {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    text-align: center;
+    font-family: var(--font-mono);
+  }
+  .cat-critical { background: #2a1215; color: var(--c-critical); }
+  .cat-warning { background: #261500; color: var(--c-warning); }
+  .cat-ok { background: #0d2318; color: var(--c-ok); }
+  .cat-info { background: #0d1f33; color: var(--c-info); }
+
+  .alert-body { }
+  .alert-title { font-weight: 600; margin-bottom: 3px; }
+  .alert-detail { font-size: 12px; color: var(--c-text-muted); }
+  .alert-detail code {
+    font-family: var(--font-mono);
+    background: #23262f;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: #a8b3cf;
+  }
+  .alert-action {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #23262f;
+    color: var(--c-text);
+    white-space: nowrap;
+    font-weight: 500;
+    text-align: center;
+    min-width: 90px;
+  }
+
+  /* --- OK LIST --- */
+  .ok-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0;
+  }
+  .ok-item {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--c-border);
+    border-right: 1px solid var(--c-border);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ok-item:last-child { border-bottom: none; }
+  .ok-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-ok); flex-shrink: 0; }
+
+  /* --- SEARCH TERMS TABLE --- */
+  .st-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .st-table th {
+    background: #1c1f27;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--c-text-muted);
+    border-bottom: 2px solid var(--c-border);
+  }
+  .st-table td { padding: 9px 12px; border-bottom: 1px solid var(--c-border); vertical-align: middle; }
+  .st-table tr:last-child td { border-bottom: none; }
+  .st-table tr:hover td { background: #1c1f27; }
+  .st-term { font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+  .st-campaign { font-size: 11px; color: var(--c-text-muted); }
+  .st-spend { font-family: var(--font-mono); font-weight: 600; color: var(--c-critical); }
+  .st-action-tag {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .action-exclude { background: #2a1215; color: var(--c-critical); }
+  .action-investigate { background: #261500; color: var(--c-warning); }
+  .action-watch { background: #0d1f33; color: var(--c-info); }
+
+  /* --- RULES ACCORDION --- */
+  .rules-section { margin-top: 24px; }
+  .rules-toggle {
+    background: #1c1f27;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-text-muted);
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .rules-toggle:hover { background: #23262f; }
+  .rules-body {
+    display: none;
+    border: 1px solid var(--c-border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 16px;
+    background: var(--c-surface);
+  }
+  .rules-body.open { display: block; }
+  .rules-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .rules-table th { text-align: left; padding: 6px 12px; background: #1c1f27; border-bottom: 1px solid var(--c-border); font-size: 11px; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+  .rules-table td { padding: 8px 12px; border-bottom: 1px solid var(--c-border); font-family: var(--font-mono); font-size: 12px; }
+  .rules-table tr:last-child td { border-bottom: none; }
+  .threshold-warning { color: var(--c-warning); font-weight: 600; }
+  .threshold-critical { color: var(--c-critical); font-weight: 600; }
+
+  /* --- PHASE BADGE --- */
+  .phase-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+  }
+  .phase-collecting { background: #2d2200; color: #f0a000; }
+  .phase-active { background: #0d2318; color: var(--c-ok); }
+
+  /* --- EMPTY STATE --- */
+  .empty-state { padding: 24px; text-align: center; color: var(--c-text-muted); font-size: 13px; }
+
+  /* --- UTILITY --- */
+  .mono { font-family: var(--font-mono); }
+  .text-critical { color: var(--c-critical); }
+  .text-warning { color: var(--c-warning); }
+  .text-ok { color: var(--c-ok); }
+  .divider { border: none; border-top: 1px solid var(--c-border); margin: 20px 0; }
+
+  /* --- LEGEND --- */
+  .legend {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 10px 24px;
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="header-title">RetraitePlus - Dashboard Anomalies PPC</div>
+    <div class="header-subtitle">Données réelles · 6 comptes Google Ads · 13 au 19 mai 2026</div>
+  </div>
+  <div class="header-meta">
+    Généré le : <strong>2026-05-20</strong><br>
+    Source : Supermetrics / Google Ads<br>
+    <span style="opacity:0.5">Search terms : export manuel requis</span>
+  </div>
+</div>
+<div class="legend">
+  <span style="font-weight:600;color:var(--c-text-muted)">Légende :</span>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c-critical)"></div> Critique - action dans la journée</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c-warning)"></div> Warning - à vérifier sous 48h</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c-info)"></div> Info - à traiter sous 7-30j</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--c-ok)"></div> OK - dans les seuils</div>
+</div>
+<div class="tabs-nav">
+  <button class="tab-btn active" onclick="showTab('be')">
+    BE MR Repos
+    <span class="tab-badge badge-critical">3</span>
+  </button>
+  <button class="tab-btn " onclick="showTab('it')">
+    IT Casa Di Riposo
+    <span class="tab-badge badge-critical">2</span>
+  </button>
+  <button class="tab-btn " onclick="showTab('ca1')">
+    CA Choisir RPA
+    <span class="tab-badge badge-critical">3</span>
+  </button>
+  <button class="tab-btn " onclick="showTab('ca2')">
+    CA Places Senior
+    <span class="tab-badge badge-critical">1</span>
+  </button>
+  <button class="tab-btn " onclick="showTab('fr')">
+    FR Wikiehpad
+    <span class="tab-badge badge-critical">1</span>
+  </button>
+  <button class="tab-btn " onclick="showTab('ch')">
+    CH Heimfinder
+    <span class="tab-badge badge-critical">4</span>
+  </button></div>
+
+<div id="tab-be" class="tab-content active">
+  <div class="kpi-period">13 - 19 mai 2026 | Devise : EUR <span class="phase-badge phase-active">Actif</span></div>
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="kpi-label">Spend 7j</div><div class="kpi-value">3 067 €</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPL moyen</div><div class="kpi-value text-ok">24.16 €</div><div class="kpi-sub">+5% vs baseline (23€)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Conversions</div><div class="kpi-value">126.95</div></div>
+    <div class="kpi-card"><div class="kpi-label">CVR</div><div class="kpi-value">8.35%</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPC moyen</div><div class="kpi-value">2.02 €</div></div>
+    <div class="kpi-card"><div class="kpi-label">CTR</div><div class="kpi-value">8.05%</div></div>
+    <div class="kpi-card"><div class="kpi-label">Clics</div><div class="kpi-value">1 521</div></div>
+  </div>
+  <div class="section section-critical">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; ALERTES CRITIQUES</span>
+      <span class="count">3 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">BX - MR Bruxelles : CPL 47.60€ (+107% vs baseline 23€) — CRITIQUE</div>
+          <div class="alert-detail">Spend 7j : <code>1 760€</code> | Conv : <code>37.0</code> | IS Lost Rank : <code>51.3%</code><br>Campagne principale (57.4% du budget). CPL au-dessus du seuil critique (46€). IS Lost Rank 51% = pertes sur encheres en plus de la sous-performance.</div>
+        </div>
+        <div class="alert-action">Réduire tCPA ou arbitrer le budget</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT D - IS Rank</span>
+        <div class="alert-body">
+          <div class="alert-title">MREPOS-BE 001 : IS Lost Rank 90% — top performer étouffé (CPL 13.24€)</div>
+          <div class="alert-detail">Spend 7j : <code>52.97€</code> | Conv : <code>4</code> | CPL : <code>13.24€</code><br>IS Lost Rank 90% = 9 impressions sur 10 perdues par manque d'enchere. Potentiel de volume 5-10x si encheres relevees.</div>
+        </div>
+        <div class="alert-action">Augmenter les enchères en urgence</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT D - IS Rank</span>
+        <div class="alert-body">
+          <div class="alert-title">MR - Global : IS Lost Rank 90% — meilleur CPL du compte (4.63€) non exploité</div>
+          <div class="alert-detail">Spend 7j : <code>27.81€</code> | Conv : <code>6</code> | CPL : <code>4.63€</code><br>CPL 5x inférieur à la baseline. Campagne quasi-invisible faute d'encheres suffisantes. Chaque euro investi ici génère 5x plus de leads qu'en BX-MR Bruxelles.</div>
+        </div>
+        <div class="alert-action">Augmenter budget + enchères en priorité</div>
+      </div></div>
+  </div>
+  <div class="section section-warning">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; POINTS DE VIGILANCE</span>
+      <span class="count">3 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">BX - MR Woluwe-Saint-Pierre : CPL 45.24€ (+97% vs baseline)</div>
+          <div class="alert-detail">Spend 7j : <code>46.14€</code> | Conv : <code>1.02</code> | Seuil warning : <code>34.50€</code></div>
+        </div>
+        <div class="alert-action">Surveiller 48h</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT B - 0 conv</span>
+        <div class="alert-body">
+          <div class="alert-title">BX - MR Anderlecht : 51.60€ dépensés — 0 conversion</div>
+          <div class="alert-detail">Spend 7j : <code>51.60€</code> | Conv : <code>0</code> | Seuil warning : <code>50€</code><br>Déjà signalé en audit mai 2026. Verifier LP et tracking.</div>
+        </div>
+        <div class="alert-action">Investiguer LP</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT D - IS Rank</span>
+        <div class="alert-body">
+          <div class="alert-title">MR - Brabant Wallon : IS Lost Rank 72.54% (CPL 11.79€ — sous cible)</div>
+          <div class="alert-detail">Spend 7j : <code>265.12€</code> | Conv : <code>22.48</code><br>Top performer (CPL 49% sous baseline) perdant 72% de son volume potentiel sur encheres.</div>
+        </div>
+        <div class="alert-action">Augmenter enchères</div>
+      </div></div>
+  </div>
+  <div class="section section-ok">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#10003; INDICATEURS DANS LES SEUILS</span>
+      <span class="count">6 OK</span>
+    </div>
+    <div class="section-body"><div class="ok-grid"><div class="ok-item"><span class="ok-dot"></span>CPL compte 24.16€ stable (baseline 23€, warning à 34.50€)</div><div class="ok-item"><span class="ok-dot"></span>CPC compte 2.02€ sous seuil warning (3€)</div><div class="ok-item"><span class="ok-dot"></span>Toutes les campagnes diffusent</div><div class="ok-item"><span class="ok-dot"></span>CVR 8.35% stable vs baseline 7.52%</div><div class="ok-item"><span class="ok-dot"></span>RS - Regional (new) : CPL 3.95€ — top performer</div><div class="ok-item"><span class="ok-dot"></span>BX - RS - Locales (new) : CPL 7.95€, CVR 15.2%</div></div></div>
+  </div>
+  <div class="section section-st">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#128269; SEARCH TERMS SUSPECTS</span>
+      <span class="count">Export Google Ads requis</span>
+    </div>
+    <div class="section-body">
+      <div class="empty-state" style="padding:16px;color:#6c757d;font-size:13px;">
+        Les search terms necessitent un export manuel depuis Google Ads UI (Rapport &gt; Search terms)<br>
+        ou seront disponibles via l'API Google Ads apres approbation.
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tab-it" class="tab-content ">
+  <div class="kpi-period">13 - 19 mai 2026 | Devise : EUR <span class="phase-badge phase-active">Actif</span></div>
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="kpi-label">Spend 7j</div><div class="kpi-value">2 460 €</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPL moyen</div><div class="kpi-value text-ok">3.60 €</div><div class="kpi-sub">+3.4% vs baseline (3.48€)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Conversions</div><div class="kpi-value">684.13</div></div>
+    <div class="kpi-card"><div class="kpi-label">CVR</div><div class="kpi-value">14.23%</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPC moyen</div><div class="kpi-value">0.51 €</div></div>
+    <div class="kpi-card"><div class="kpi-label">CTR</div><div class="kpi-value">11.83%</div></div>
+    <div class="kpi-card"><div class="kpi-label">Clics</div><div class="kpi-value">4 806</div></div>
+  </div>
+  <div class="section section-critical">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; ALERTES CRITIQUES</span>
+      <span class="count">2 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">BLDZR - CDR Provincia Torino : CPL 11.02€ (+217% vs baseline 3.48€)</div>
+          <div class="alert-detail">Spend 7j : <code>115.68€</code> | Conv : <code>10.5</code> | Seuil critique : <code>6.96€</code><br>CPL 3.2x la baseline. Campagne province (non-ville) structurellement plus chère.</div>
+        </div>
+        <div class="alert-action">Revoir tCPA ou pauser</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">BLDZR - RSA Provincia Torino : CPL 9.32€ (+168% vs baseline)</div>
+          <div class="alert-detail">Spend 7j : <code>55.92€</code> | Conv : <code>6</code> | Seuil critique : <code>6.96€</code></div>
+        </div>
+        <div class="alert-action">Revoir tCPA</div>
+      </div></div>
+  </div>
+  <div class="section section-warning">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; POINTS DE VIGILANCE</span>
+      <span class="count">2 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">BLDZR - CDR Palermo : CPL 5.40€ (+55% vs baseline)</div>
+          <div class="alert-detail">Spend 7j : <code>96.34€</code> | Conv : <code>17.83</code> | Seuil warning : <code>5.22€</code></div>
+        </div>
+        <div class="alert-action">Surveiller 7j</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">BLDZR - CDR Provincia Roma : CPL 6.18€ (+78% vs baseline)</div>
+          <div class="alert-detail">Spend 7j : <code>53.56€</code> | Conv : <code>8.67</code> | Seuil warning : <code>5.22€</code></div>
+        </div>
+        <div class="alert-action">Surveiller 7j</div>
+      </div></div>
+  </div>
+  <div class="section section-ok">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#10003; INDICATEURS DANS LES SEUILS</span>
+      <span class="count">6 OK</span>
+    </div>
+    <div class="section-body"><div class="ok-grid"><div class="ok-item"><span class="ok-dot"></span>CPL compte 3.60€ stable (baseline 3.48€, warning à 5.22€)</div><div class="ok-item"><span class="ok-dot"></span>CDR Milano : CPL 1.13€ — meilleur du compte (59.99 conv)</div><div class="ok-item"><span class="ok-dot"></span>RSA Géo - Note 2 : CPL 1.32€ — excellent</div><div class="ok-item"><span class="ok-dot"></span>CDR Géo - Note 4 : CPL 2.34€ — top performer</div><div class="ok-item"><span class="ok-dot"></span>Aucune campagne avec 0 conv et spend > 20€</div><div class="ok-item"><span class="ok-dot"></span>CPC 0.51€ sous seuil warning (0.93€)</div></div></div>
+  </div>
+  <div class="section section-st">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#128269; SEARCH TERMS SUSPECTS</span>
+      <span class="count">Export Google Ads requis</span>
+    </div>
+    <div class="section-body">
+      <div class="empty-state" style="padding:16px;color:#6c757d;font-size:13px;">
+        Les search terms necessitent un export manuel depuis Google Ads UI (Rapport &gt; Search terms)<br>
+        ou seront disponibles via l'API Google Ads apres approbation.
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tab-ca1" class="tab-content ">
+  <div class="kpi-period">13 - 19 mai 2026 | Devise : CAD <span class="phase-badge phase-active">Actif</span></div>
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="kpi-label">Spend 7j</div><div class="kpi-value">831 CAD</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPL moyen</div><div class="kpi-value text-ok">12.14 CAD</div><div class="kpi-sub">+14% vs baseline (10.69)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Conversions</div><div class="kpi-value">68.46</div></div>
+    <div class="kpi-card"><div class="kpi-label">CVR</div><div class="kpi-value">9.60%</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPC moyen</div><div class="kpi-value">1.17 CAD</div></div>
+    <div class="kpi-card"><div class="kpi-label">CTR</div><div class="kpi-value">~10.7%</div></div>
+    <div class="kpi-card"><div class="kpi-label">Clics</div><div class="kpi-value">713</div></div>
+  </div>
+  <div class="section section-critical">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; ALERTES CRITIQUES</span>
+      <span class="count">3 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT D - IS Rank</span>
+        <div class="alert-body">
+          <div class="alert-title">RPA - Note 5 BIS : IS Lost Rank 80.4% — 80% du volume potentiel non capté</div>
+          <div class="alert-detail">Spend 7j : <code>605.84 CAD</code> | Conv : <code>49.47</code> | CPL : <code>12.25 CAD</code><br>Campagne principale (72.9% budget) perd 4 impressions sur 5 sur rang d'enchères.</div>
+        </div>
+        <div class="alert-action">Augmenter enchères broad</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT D - IS Rank</span>
+        <div class="alert-body">
+          <div class="alert-title">CHSLD - MTL 1 : IS Lost Rank 82.95%</div>
+          <div class="alert-detail">Spend 7j : <code>102.45 CAD</code> | Conv : <code>5.99</code> | CPL : <code>17.10 CAD</code><br>IS Lost Rank très élevé + CPL dégradé = double problème.</div>
+        </div>
+        <div class="alert-action">Revoir enchères + tCPA</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT D - IS Rank</span>
+        <div class="alert-body">
+          <div class="alert-title">CHSLD - Note 5 BIS : IS Lost Rank 86.08% (CPL 10.84 CAD — sous baseline)</div>
+          <div class="alert-detail">Spend 7j : <code>65.03 CAD</code> | Conv : <code>6</code><br>Meilleure efficacité du compte mais quasi-invisible. Potentiel de scale important.</div>
+        </div>
+        <div class="alert-action">Augmenter enchères en priorité</div>
+      </div></div>
+  </div>
+  <div class="section section-warning">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; POINTS DE VIGILANCE</span>
+      <span class="count">1 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">CHSLD - MTL 1 : CPL 17.10 CAD (+60% vs baseline 10.69)</div>
+          <div class="alert-detail">Spend 7j : <code>102.45 CAD</code> | Conv : <code>5.99</code> | Seuil warning : <code>16.04 CAD</code></div>
+        </div>
+        <div class="alert-action">Investiguer qualité trafic</div>
+      </div></div>
+  </div>
+  <div class="section section-ok">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#10003; INDICATEURS DANS LES SEUILS</span>
+      <span class="count">4 OK</span>
+    </div>
+    <div class="section-body"><div class="ok-grid"><div class="ok-item"><span class="ok-dot"></span>CPL compte 12.14 CAD (sous seuil warning 16.04 CAD)</div><div class="ok-item"><span class="ok-dot"></span>MR - MTL 3 : CPL 8.21 CAD — sous baseline</div><div class="ok-item"><span class="ok-dot"></span>CHSLD - Note 5 BIS : CPL 10.84 CAD — bon</div><div class="ok-item"><span class="ok-dot"></span>Toutes les campagnes diffusent</div></div></div>
+  </div>
+  <div class="section section-st">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#128269; SEARCH TERMS SUSPECTS</span>
+      <span class="count">Export Google Ads requis</span>
+    </div>
+    <div class="section-body">
+      <div class="empty-state" style="padding:16px;color:#6c757d;font-size:13px;">
+        Les search terms necessitent un export manuel depuis Google Ads UI (Rapport &gt; Search terms)<br>
+        ou seront disponibles via l'API Google Ads apres approbation.
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tab-ca2" class="tab-content ">
+  <div class="kpi-period">13 - 19 mai 2026 | Devise : CAD <span class="phase-badge phase-active">Actif</span></div>
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="kpi-label">Spend 7j</div><div class="kpi-value">4 554 CAD</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPL moyen</div><div class="kpi-value text-ok">12.55 CAD</div><div class="kpi-sub">+16% vs baseline (10.79)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Conversions</div><div class="kpi-value">362.88</div></div>
+    <div class="kpi-card"><div class="kpi-label">CVR</div><div class="kpi-value">11.14%</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPC moyen</div><div class="kpi-value">1.40 CAD</div></div>
+    <div class="kpi-card"><div class="kpi-label">CTR</div><div class="kpi-value">~11.2%</div></div>
+    <div class="kpi-card"><div class="kpi-label">Clics</div><div class="kpi-value">3 257</div></div>
+  </div>
+  <div class="section section-critical">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; ALERTES CRITIQUES</span>
+      <span class="count">1 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">CA PLACESSENIOR 001 RPA [en] : CPL 28.03 CAD (+160% vs baseline) — CRITIQUE</div>
+          <div class="alert-detail">Spend 7j : <code>84.09 CAD</code> | Conv : <code>3</code> | Seuil critique : <code>21.58 CAD</code><br>CPL 2.6x la baseline. Volume faible mais spend non négligeable. Meilleure option : pauser et rediriger vers [en] maison-de-retraite (CPL 8.12 CAD).</div>
+        </div>
+        <div class="alert-action">Pauser ou réduire le tCPA</div>
+      </div></div>
+  </div>
+  <div class="section section-warning">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; POINTS DE VIGILANCE</span>
+      <span class="count">3 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT A - CPL</span>
+        <div class="alert-body">
+          <div class="alert-title">MR - Montréal : CPL 18.78 CAD (+74% vs baseline)</div>
+          <div class="alert-detail">Spend 7j : <code>328.51 CAD</code> | Conv : <code>17.49</code> | Seuil warning : <code>16.19 CAD</code><br>Historiquement au-dessus du CPL compte. Sur-alloué vs MOON - Québec Ville (CPL 14.73 CAD).</div>
+        </div>
+        <div class="alert-action">Réallouer vers Québec Ville</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">CA PLACESSENIOR 001 RPA : IS Lost Budget 37.03%</div>
+          <div class="alert-detail">Spend 7j : <code>3 495.64 CAD</code> | IS Lost Budget : <code>37.03%</code> (seuil warning 20%)<br>Campagne principale (76.7% budget) bride par budget. Proche du seuil critique (40%).</div>
+        </div>
+        <div class="alert-action">Augmenter le budget</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT D - IS Rank</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Québec Ville : IS Lost Rank 57.33%</div>
+          <div class="alert-detail">Spend 7j : <code>367.98 CAD</code> | Conv : <code>24.99</code> | CPL : <code>14.73 CAD</code><br>Bon CPL mais perd 57% du volume potentiel sur rang. Sous-enchère à corriger.</div>
+        </div>
+        <div class="alert-action">Augmenter enchères</div>
+      </div></div>
+  </div>
+  <div class="section section-ok">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#10003; INDICATEURS DANS LES SEUILS</span>
+      <span class="count">5 OK</span>
+    </div>
+    <div class="section-body"><div class="ok-grid"><div class="ok-item"><span class="ok-dot"></span>CPL compte 12.55 CAD (sous seuil warning 16.19 CAD)</div><div class="ok-item"><span class="ok-dot"></span>RPA Partenaires : CPL 6.997 CAD — top performer</div><div class="ok-item"><span class="ok-dot"></span>T-Globale RPA : CPL 4.64 CAD (volume faible mais signal fort)</div><div class="ok-item"><span class="ok-dot"></span>RPA [en] maison-de-retraite : CPL 8.12 CAD — sain</div><div class="ok-item"><span class="ok-dot"></span>CPC 1.40 CAD sous seuil warning (2.31 CAD)</div></div></div>
+  </div>
+  <div class="section section-st">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#128269; SEARCH TERMS SUSPECTS</span>
+      <span class="count">Export Google Ads requis</span>
+    </div>
+    <div class="section-body">
+      <div class="empty-state" style="padding:16px;color:#6c757d;font-size:13px;">
+        Les search terms necessitent un export manuel depuis Google Ads UI (Rapport &gt; Search terms)<br>
+        ou seront disponibles via l'API Google Ads apres approbation.
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tab-fr" class="tab-content ">
+  <div class="kpi-period">13 - 19 mai 2026 | Devise : EUR <span class="phase-badge phase-collecting">Phase collecte</span></div>
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="kpi-label">Spend 7j</div><div class="kpi-value">6 001 €</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPL moyen</div><div class="kpi-value text-flat">79.48 € (obs.)</div><div class="kpi-sub">Phase collecte — pas de baseline</div></div>
+    <div class="kpi-card"><div class="kpi-label">Conversions</div><div class="kpi-value">75.5</div></div>
+    <div class="kpi-card"><div class="kpi-label">CVR</div><div class="kpi-value">4.38%</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPC moyen</div><div class="kpi-value">3.48 €</div></div>
+    <div class="kpi-card"><div class="kpi-label">CTR</div><div class="kpi-value">8.56%</div></div>
+    <div class="kpi-card"><div class="kpi-label">Clics</div><div class="kpi-value">1 722</div></div>
+  </div>
+  <div class="section section-critical">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; ALERTES CRITIQUES</span>
+      <span class="count">1 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Générique : IS Lost Budget 67.7% — campagne étranglée par le budget</div>
+          <div class="alert-detail">Spend 7j : <code>735.44€</code> | Conv : <code>9</code> | CPL obs. : <code>81.72€</code><br>IS Lost Budget 67.7% = campagne générique principale bascule en pause 2/3 de la journée. Action : doubler le budget journalier (de ~100€ à ~200€/j).</div>
+        </div>
+        <div class="alert-action">Augmenter budget Générique</div>
+      </div></div>
+  </div>
+  <div class="section section-warning">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; POINTS DE VIGILANCE</span>
+      <span class="count">5 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Dep - Jura - 39 : IS Lost Budget 48.15%</div>
+          <div class="alert-detail">Spend 7j : <code>366.01€</code> | Conv : <code>3</code> | CPL obs. : <code>122€</code><br>CPL très élevé + campagne bridée par budget. Verifier si la zone génère des leads qualifiés.</div>
+        </div>
+        <div class="alert-action">Réduire budget ou pauser</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Dep - Saône-et-Loire - 71 : IS Lost Budget 47.82%</div>
+          <div class="alert-detail">Spend 7j : <code>354.24€</code> | Conv : <code>9</code> | CPL obs. : <code>39.36€</code><br>Bon CPL pour un département mais bridé — potentiel de volume supplémentaire.</div>
+        </div>
+        <div class="alert-action">Augmenter budget</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Dep - Charente-Maritime - 17 : IS Lost Budget 46.3%</div>
+          <div class="alert-detail">Spend 7j : <code>356.27€</code> | Conv : <code>7.5</code> | CPL obs. : <code>47.50€</code></div>
+        </div>
+        <div class="alert-action">Augmenter budget ou consolider</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Dep - Calvados - 14 : IS Lost Budget 40.05%</div>
+          <div class="alert-detail">Spend 7j : <code>393.26€</code> | Conv : <code>12</code> | CPL obs. : <code>32.77€</code><br>Meilleur CPL Dep du compte — sous-exploité. Priorité budget.</div>
+        </div>
+        <div class="alert-action">Augmenter budget en priorité</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-warning">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Dep - Vienne - 86 : IS Lost Budget 32.71%</div>
+          <div class="alert-detail">Spend 7j : <code>347.93€</code> | Conv : <code>4</code> | CPL obs. : <code>86.98€</code></div>
+        </div>
+        <div class="alert-action">Surveiller</div>
+      </div></div>
+  </div>
+  <div class="section section-info">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#8505; PHASE COLLECTE — OBSERVATIONS</span>
+      <span class="count">2 point(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-info">CAT A - CPL (obs.)</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Ville - Le Mans : CPL observé 290.78€ — à surveiller (2 conv / 7j)</div>
+          <div class="alert-detail">Spend 7j : <code>581.56€</code> | Conv : <code>2</code><br>Volume insuffisant pour conclure (< 5 conv). Signal précoce mais notable. Envisager consolidation Dep + Ville pour Le Mans.</div>
+        </div>
+        <div class="alert-action">Attendre 10+ conv</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-info">CAT A - CPL (obs.)</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Ville - Poitiers : CPL observé 214.95€ (2 conv / 7j)</div>
+          <div class="alert-detail">Spend 7j : <code>429.90€</code> | Conv : <code>2</code><br>Même logique : CPCs très élevés en Ville vs Dep.</div>
+        </div>
+        <div class="alert-action">Comparer avec Dep Vienne (86)</div>
+      </div></div>
+  </div>
+  <div class="section section-ok">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#10003; INDICATEURS DANS LES SEUILS</span>
+      <span class="count">4 OK</span>
+    </div>
+    <div class="section-body"><div class="ok-grid"><div class="ok-item"><span class="ok-dot"></span>Aucune campagne sans diffusion</div><div class="ok-item"><span class="ok-dot"></span>MOON - Dep - Calvados : CPL obs. 32.77€ — meilleur Dep</div><div class="ok-item"><span class="ok-dot"></span>MOON - Dep - Meuse : IS Lost Budget 21.86% — limite acceptable</div><div class="ok-item"><span class="ok-dot"></span>CTR compte 8.56% — sain</div></div></div>
+  </div>
+  <div class="section section-st">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#128269; SEARCH TERMS SUSPECTS</span>
+      <span class="count">Export Google Ads requis</span>
+    </div>
+    <div class="section-body">
+      <div class="empty-state" style="padding:16px;color:#6c757d;font-size:13px;">
+        Les search terms necessitent un export manuel depuis Google Ads UI (Rapport &gt; Search terms)<br>
+        ou seront disponibles via l'API Google Ads apres approbation.
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tab-ch" class="tab-content ">
+  <div class="kpi-period">13 - 19 mai 2026 | Devise : EUR <span class="phase-badge phase-collecting">Phase collecte</span></div>
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="kpi-label">Spend 7j</div><div class="kpi-value">3 733 €</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPL moyen</div><div class="kpi-value text-ok">74.66 €</div><div class="kpi-sub">Sous baseline provisoire (100€)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Conversions</div><div class="kpi-value">50.0</div></div>
+    <div class="kpi-card"><div class="kpi-label">CVR</div><div class="kpi-value">7.73%</div></div>
+    <div class="kpi-card"><div class="kpi-label">CPC moyen</div><div class="kpi-value">5.77 €</div></div>
+    <div class="kpi-card"><div class="kpi-label">CTR</div><div class="kpi-value">6.41%</div></div>
+    <div class="kpi-card"><div class="kpi-label">Clics</div><div class="kpi-value">647</div></div>
+  </div>
+  <div class="section section-critical">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#9888; ALERTES CRITIQUES</span>
+      <span class="count">4 alerte(s)</span>
+    </div>
+    <div class="section-body">
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT B - 0 conv</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Altersheim : 556.82€ dépensés — 0 conversion</div>
+          <div class="alert-detail">Spend 7j : <code>556.82€</code> | Conv : <code>0</code> | Seuil critique : <code>200€</code><br>CPC moyen <code>12.10€</code> — très élevé. Verifier l'adéquation landing page / intention de recherche. Possible problème de ciblage ou de landing page Altersheim.</div>
+        </div>
+        <div class="alert-action">Vérifier LP Altersheim + pauser</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT B - 0 conv</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Pflegeheim : 524.69€ dépensés — 0 conversion</div>
+          <div class="alert-detail">Spend 7j : <code>524.69€</code> | Conv : <code>0</code> | CPC moyen : <code>20.18€</code><br>CPC structurellement très élevé sur Pflegeheim. Tracking à vérifier en priorité.</div>
+        </div>
+        <div class="alert-action">Vérifier tracking + LP Pflegeheim</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Générique : IS Lost Budget 54.33% — budget épuisé chaque jour</div>
+          <div class="alert-detail">Spend 7j : <code>1 518.17€</code> | Conv : <code>39.5</code> | CPL : <code>38.43€</code><br>Bonne nouvelle : IS Lost Rank 20.29% (était 77% en audit mai 2026) = enchères améliorées.<br>Mauvaise nouvelle : maintenant bride par le BUDGET. Augmenter le budget journalier.</div>
+        </div>
+        <div class="alert-action">Augmenter budget Générique</div>
+      </div>
+      <div class="alert-item">
+        <span class="alert-cat cat-critical">CAT D - Budget</span>
+        <div class="alert-body">
+          <div class="alert-title">MOON - Zürich : IS Lost Budget 58.9%</div>
+          <div class="alert-detail">Spend 7j : <code>676.01€</code> | Conv : <code>7.5</code> | CPL : <code>90.14€</code><br>CPL en-dessous du seuil warning (200€) mais 59% du volume manqué par budget.</div>
+        </div>
+        <div class="alert-action">Augmenter budget Zürich</div>
+      </div></div>
+  </div>
+  <div class="section section-ok">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#10003; INDICATEURS DANS LES SEUILS</span>
+      <span class="count">4 OK</span>
+    </div>
+    <div class="section-body"><div class="ok-grid"><div class="ok-item"><span class="ok-dot"></span>CPL compte 74.66€ sous seuil warning (200€)</div><div class="ok-item"><span class="ok-dot"></span>MOON - Générique IS Lost Rank 20.29% (était 77% en mai) — enchères corrigées</div><div class="ok-item"><span class="ok-dot"></span>MOON - Zürich IS Lost Rank 2.77% — rang OK</div><div class="ok-item"><span class="ok-dot"></span>MOON - Seniorenheim CPL 152.38€ — sous seuil warning</div></div></div>
+  </div>
+  <div class="section section-st">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>&#128269; SEARCH TERMS SUSPECTS</span>
+      <span class="count">Export Google Ads requis</span>
+    </div>
+    <div class="section-body">
+      <div class="empty-state" style="padding:16px;color:#6c757d;font-size:13px;">
+        Les search terms necessitent un export manuel depuis Google Ads UI (Rapport &gt; Search terms)<br>
+        ou seront disponibles via l'API Google Ads apres approbation.
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  body.style.display = body.style.display === 'none' ? 'block' : 'none';
+}
+function toggleRules(btn) {
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  btn.querySelector('span:last-child').textContent = body.classList.contains('open') ? '-' : '+';
+}
+</script>
+</body>
+</html>
