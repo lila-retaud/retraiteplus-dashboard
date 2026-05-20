@@ -1,4 +1,4 @@
-# RetraitePlus — Regles d'alertes PPC (dashboard operationnel)
+# RetraitePlus : Regles d'alertes PPC (dashboard operationnel)
 
 **Client** : RetraitePlus (6 comptes Google Ads)
 **Mise a jour** : 2026-05-20
@@ -27,7 +27,7 @@ Objectif : que n'importe quel membre de l'equipe sache immediatement quoi regard
 
 ---
 
-## CAT A — CPL/CPA anormalement eleve
+## CAT A : CPL/CPA anormalement eleve
 
 ### Logique
 Compare le CPL moyen des 7 derniers jours au CPL baseline de reference (moyenne ponderee fev-mars-avr 2026 (poids : avr 50%, mars 30%, fev 20%)).
@@ -44,7 +44,7 @@ Compare le CPL moyen des 7 derniers jours au CPL baseline de reference (moyenne 
 | CA Choisir RPA | CAD | 10.58 | 15.87 | 21.16 |
 | CA Places Senior | CAD | 9.60 | 14.40 | 19.20 |
 | CH Heimfinder | EUR | 100 € | 200 € | 300 € |
-| FR Wikiehpad | EUR | N/A | — | — |
+| FR Wikiehpad | EUR | N/A | N/A | - |
 
 ### Pourquoi ces seuils ?
 
@@ -61,7 +61,7 @@ Compare le CPL moyen des 7 derniers jours au CPL baseline de reference (moyenne 
 
 ---
 
-## CAT B — Campagne active avec spend eleve et 0 conversion
+## CAT B : Campagne active avec spend eleve et 0 conversion
 
 ### Logique
 
@@ -96,7 +96,7 @@ Calibres sur les anomalies detectees en audit :
 
 ---
 
-## CAT C — Campagne active qui ne diffuse pas
+## CAT C : Campagne active qui ne diffuse pas
 
 ### Logique
 
@@ -121,7 +121,7 @@ Campagne statut = ENABLED + 0 impression sur N jours consecutifs.
 
 ---
 
-## CAT D — Campagne limitee par le budget (IS Lost Budget)
+## CAT D : Campagne limitee par le budget (IS Lost Budget)
 
 ### Logique
 
@@ -144,7 +144,7 @@ Lors de l'audit du 4-10 mai 2026, la campagne MOON - Generique affichait 77% d'I
 
 ---
 
-## CAT E — Search terms suspects
+## CAT E : Search terms suspects
 
 ### Logique
 
@@ -176,7 +176,7 @@ Si le terme declenche l'alerte, le dashboard suggere :
 
 ---
 
-## CAT F — CPC anormalement eleve
+## CAT F : CPC anormalement eleve
 
 ### Logique
 
@@ -193,7 +193,7 @@ Hausse du CPC moyen du compte par rapport a la baseline.
 | IT Casa Di Riposo | EUR | 0.524 € | 0.917 € | 1.310 € |
 | CA Choisir RPA | CAD | 0.975 | 1.706 | 2.438 |
 | CA Places Senior | CAD | 1.229 | 2.151 | 3.073 |
-| FR Wikiehpad | EUR | N/A phase collecte | — | — |
+| FR Wikiehpad | EUR | N/A phase collecte | N/A | - |
 | CH Heimfinder | EUR | N/A marche premium | pas d'alerte | pas d'alerte |
 
 **CH : pas d'alerte CPC.** Le marche suisse a des CPC structurellement tres eleves et variables - une alerte CPC serait un bruit constant sans valeur diagnostique.
@@ -207,7 +207,7 @@ Hausse du CPC moyen du compte par rapport a la baseline.
 
 ---
 
-## CAT G — CTR anormalement bas
+## CAT G : CTR anormalement bas
 
 ### Logique
 
@@ -238,9 +238,9 @@ Un CTR tres bas peut indiquer :
 
 ---
 
-## CAT H — Alertes structurelles
+## CAT H : Alertes structurelles
 
-### H1 — Campagne en apprentissage Smart Bidding depuis trop longtemps
+### H1 : Campagne en apprentissage Smart Bidding depuis trop longtemps
 
 **Condition** : campagne avec strategie tCPA/tROAS en statut "Apprentissage" depuis > 14 jours (21 jours pour FR et CH en phase collecte).
 
@@ -250,7 +250,7 @@ Un CTR tres bas peut indiquer :
 
 ---
 
-### H2 — Concentration budgetaire excessive
+### H2 : Concentration budgetaire excessive
 
 **Condition** : une seule campagne absorbe > 65% du budget total du compte sur 7j.
 
@@ -262,7 +262,7 @@ Un CTR tres bas peut indiquer :
 
 ---
 
-### H3 — CVR en chute
+### H3 : CVR en chute
 
 **Condition** : CVR du compte sur les 7 derniers jours baisse de plus de X% par rapport aux 14 jours precedents.
 
@@ -279,7 +279,7 @@ Un CTR tres bas peut indiquer :
 
 ---
 
-### H4 — RSA efficacite Faible dominante
+### H4 : RSA efficacite Faible dominante
 
 **Condition** : > 50% des RSA actifs d'une campagne sont en efficacite "Faible" Google Ads.
 
@@ -291,12 +291,12 @@ Un CTR tres bas peut indiquer :
 
 ---
 
-## CAT I — Tracking fire (conversion silencieuse)
+## CAT I : Tracking fire (conversion silencieuse)
 
 ### Logique
 
 CVR tombe a 0% sur N jours consecutifs alors que les clics et le spend continuent normalement.
-Distinct de CAT B (spend eleve + 0 conv) : ici le compte tourne normalement en apparence — budget depense, clics recus — mais aucune conversion enregistree. Signal : formulaire casse, landing page down, tag de conversion supprime ou modifie.
+Distinct de CAT B (spend eleve + 0 conv) : ici le compte tourne normalement en apparence - budget depense, clics recus - mais aucune conversion enregistree. Signal : formulaire casse, landing page down, tag de conversion supprime ou modifie.
 
 **Condition** : 0 conversion sur N jours consecutifs ET clics > 50% de la moyenne 7j (le compte tourne) ET baseline conv/jour depasse le seuil minimum du compte.
 
@@ -326,7 +326,7 @@ En Data-Driven Attribution (le modele utilise sur tous les comptes RetraitePlus)
 
 ---
 
-## CAT J — Spike de spend anormal
+## CAT J : Spike de spend anormal
 
 ### Logique
 
@@ -357,7 +357,7 @@ Si le spike coincide avec l'une de ces situations, verifier quand meme que le CP
 
 ---
 
-## CAT K — Ecart tCPA cible vs CPL reel
+## CAT K : Ecart tCPA cible vs CPL reel
 
 ### Logique
 
@@ -381,11 +381,11 @@ Sur BE en mai 2026 : BX-MR Ixelles avait un tCPA configure a 38€. L'algorithme
 
 ### Donnee requise
 
-Le tCPA configure est lisible via l'API Google Ads (champ `campaign.target_cpa.target_cpa_micros`). Non disponible dans Supermetrics — necessite l'API native.
+Le tCPA configure est lisible via l'API Google Ads (champ `campaign.target_cpa.target_cpa_micros`). Non disponible dans Supermetrics - necessite l'API native.
 
 ---
 
-## CAT L — Annonce refusee sans backup
+## CAT L : Annonce refusee sans backup
 
 ### Logique
 
