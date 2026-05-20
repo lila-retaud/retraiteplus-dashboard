@@ -291,6 +291,146 @@ Un CTR tres bas peut indiquer :
 
 ---
 
+## CAT I — Tracking fire (conversion silencieuse)
+
+### Logique
+
+CVR tombe a 0% sur N jours consecutifs alors que les clics et le spend continuent normalement.
+Distinct de CAT B (spend eleve + 0 conv) : ici le compte tourne normalement en apparence — budget depense, clics recus — mais aucune conversion enregistree. Signal : formulaire casse, landing page down, tag de conversion supprime ou modifie.
+
+**Condition** : 0 conversion sur N jours consecutifs ET clics > 50% de la moyenne 7j (le compte tourne) ET baseline conv/jour depasse le seuil minimum du compte.
+
+- **CRITIQUE** : 2 jours consecutifs (3 jours pour comptes en phase collecte)
+
+### Seuils par compte
+
+| Compte | Min conv/j baseline | Jours declencheur |
+|---|---|---|
+| BE MR Repos | 5 | 2 |
+| IT Casa Di Riposo | 10 | 2 |
+| CA Choisir RPA | 3 | 2 |
+| CA Places Senior | 10 | 2 |
+| FR Wikiehpad | 2 | 3 |
+| CH Heimfinder | 1 | 3 |
+
+### Pourquoi ce niveau de priorite ?
+
+En Data-Driven Attribution (le modele utilise sur tous les comptes RetraitePlus), les conversions sont fractionnelles et distribuees dans le temps. Un tracking fire peut ressembler a une simple baisse de performance pendant 24h. Sur BE a ~370€/j, 2 jours de spend avec 0 conv = 740€ de budget brule sans aucun lead genere.
+
+### Verification immediate
+
+1. Tester le formulaire sur la landing page manuellement
+2. Verifier les evenements de conversion dans GA4 (rapport temps reel)
+3. Verifier le tag Google Ads dans Tag Assistant
+4. Regarder si une modification de LP ou GTM a eu lieu dans les 48h precedentes
+
+---
+
+## CAT J — Spike de spend anormal
+
+### Logique
+
+Le spend d'une journee depasse un multiple du spend quotidien moyen des 7 derniers jours.
+
+- **WARNING** : spend 1j > moyenne 7j x 1.5
+- **CRITIQUE** : spend 1j > moyenne 7j x 2.0
+
+Valeurs identiques pour tous les comptes.
+
+### Pourquoi surveiller ?
+
+Smart Bidding (tCPA, Max Conversions) peut injecter massivement du budget sur une journee lors d'une phase d'exploration, apres une modification de tCPA, ou en reponse a une variation saisonniere qu'il juge favorable. Sur CA2 (~650 CAD/j budget moyen), un spike a x2.0 = 1 300 CAD depenses en une journee.
+
+Causes frequentes :
+- Modification recente du tCPA ou du budget (+20% ou plus)
+- Smart Bidding en sortie d'apprentissage qui "rattrape" le volume manque
+- Budget shared mal configure
+- Pic de recherche lie a un evenement externe (crise sanitaire, couverture media du sujet)
+
+### Exceptions normales
+
+- Lundi apres un week-end faible (rebond naturel)
+- Premier jour du mois (budget remis a zero)
+- Apres une pause volontaire de campagne (volume rattrape)
+
+Si le spike coincide avec l'une de ces situations, verifier quand meme que le CPL reste dans les seuils.
+
+---
+
+## CAT K — Ecart tCPA cible vs CPL reel
+
+### Logique
+
+Si le tCPA configure dans Google Ads est X et que le CPL reel sur 7j est Y, l'algorithme Smart Bidding va reduire les impressions pour "proteger" la cible. Le volume s'effondre silencieusement sans que les alertes CPL (CAT A) ne se declenchent, puisque le CPL est "correct" vu de l'algo.
+
+- **WARNING** : CPL reel 7j > tCPA configure x 1.3
+- **CRITIQUE** : CPL reel 7j > tCPA configure x 1.6
+
+### Seuils par compte
+
+| Compte | Multiplicateur WARNING | Multiplicateur CRITIQUE |
+|---|---|---|
+| BE, IT, CA1, CA2 | x 1.3 | x 1.6 |
+| FR, CH (collecting) | x 1.5 | x 2.0 |
+
+Les comptes en phase collecte ont des seuils plus permissifs car le tCPA n'est pas encore fixe de facon definitive.
+
+### Exemple concret
+
+Sur BE en mai 2026 : BX-MR Ixelles avait un tCPA configure a 38€. L'algorithme n'arrivait pas a convertir a ce niveau (CPL reel 119€ = x3.1). Resultat : le compte a throttle les impressions. L'alerte CAT A s'est declenchee (CPL eleve) mais CAT K aurait permis de diagnostiquer la cause specifique (tCPA trop serre) plutot que de simplement constater le symptome.
+
+### Donnee requise
+
+Le tCPA configure est lisible via l'API Google Ads (champ `campaign.target_cpa.target_cpa_micros`). Non disponible dans Supermetrics — necessite l'API native.
+
+---
+
+## CAT L — Annonce refusee sans backup
+
+### Logique
+
+Un groupe d'annonces se retrouve avec 0 RSA en statut "Eligible" (toutes ses RSA sont refusees, en attente de validation, ou pausees). Le groupe peut continuer a diffuser sur des ETAs historiques (obsoletes) sans que CAT C (non-diffusion) se declenche, mais avec un CTR et un CVR degrades.
+
+**Condition** : groupe d'annonces ENABLED avec 0 RSA eligible depuis 1 jour -> CRITIQUE immediat.
+
+**Niveau** : CRITIQUE (pas de gradation : une annonce refusee dans un groupe sans backup = probleme immediat)
+
+### Pourquoi c'est important dans ce contexte
+
+Sur BE en avril 2026 : 75.9% des annonces sont encore des ETAs (format obsolete). Si les RSA actives d'un groupe sont refusees, le groupe retombe sur ces ETAs non optimisables. Les ETAs ne peuvent plus etre modifiees depuis juin 2022 donc aucun correctif n'est possible sans creer une nouvelle RSA.
+
+### Causes frequentes de refus
+
+- Headline ou description qui contient une promesse non verifiable ("Meilleure maison de retraite")
+- URL finale differente du domaine affiche (path URL)
+- Contenu considere comme medical ou financier sensible (frequent dans le secteur senior)
+- Repetition excessive du meme terme dans les headlines
+
+### Donnee requise
+
+Statut des annonces lisible via l'API Google Ads (rapport `ad_group_ad`, champ `policy_summary.approval_status`). Non disponible dans Supermetrics.
+
+---
+
+## Tableau de synthese complet
+
+| Cat | Nom | Fenetre | Sev. max | API requise | Comptes |
+|---|---|---|---|---|---|
+| A | CPL anormalement eleve | 7j glissants | CRITIQUE | Non | BE, IT, CA1, CA2, CH |
+| B | Spend eleve et 0 conversion | 7j glissants | CRITIQUE | Non | Tous |
+| C | Campagne sans diffusion | Consecutif | CRITIQUE | Non | Tous |
+| D | IS Lost Budget / Rank | 7j glissants | CRITIQUE | Non | Tous |
+| E | Search terms suspects | 7j glissants | WARNING | Non (Supermetrics limite) | Tous |
+| F | CPC anormalement eleve | 7j glissants | CRITIQUE | Non | BE, IT, CA1, CA2 |
+| G | CTR anormalement bas | 7j glissants | CRITIQUE | Non | Tous |
+| H | Smart Bidding, CVR, concentration, RSA | Variable | WARNING | Partiel | Tous |
+| I | Tracking fire | Consecutif | CRITIQUE | Non | Tous |
+| J | Spike de spend | Quotidien | CRITIQUE | Non | Tous |
+| K | Ecart tCPA cible / CPL reel | 7j glissants | CRITIQUE | Oui (tCPA) | BE, IT, CA1, CA2 |
+| L | Annonce refusee sans backup | Quotidien | CRITIQUE | Oui | Tous |
+
+---
+
 ## Lecture du dashboard
 
 ### Niveaux de severite
