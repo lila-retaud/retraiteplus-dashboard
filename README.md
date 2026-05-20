@@ -30,7 +30,7 @@ Objectif : que n'importe quel membre de l'equipe sache immediatement quoi regard
 ## CAT A — CPL/CPA anormalement eleve
 
 ### Logique
-Compare le CPL moyen des 7 derniers jours au CPL baseline de reference (calcule sur avril 2026).
+Compare le CPL moyen des 7 derniers jours au CPL baseline de reference (moyenne ponderee fev-mars-avr 2026 (poids : avr 50%, mars 30%, fev 20%)).
 
 - **WARNING** : CPL 7j > baseline x 1.5
 - **CRITICAL** : CPL 7j > baseline x 2.0
@@ -39,10 +39,10 @@ Compare le CPL moyen des 7 derniers jours au CPL baseline de reference (calcule 
 
 | Compte | Devise | CPL baseline | WARNING | CRITICAL |
 |---|---|---|---|---|
-| BE MR Repos | EUR | 23 € | 34.50 € | 46 € |
-| IT Casa Di Riposo | EUR | 3.48 € | 5.22 € | 6.96 € |
-| CA Choisir RPA | CAD | 10.69 | 16.04 | 21.38 |
-| CA Places Senior | CAD | 10.79 | 16.19 | 21.58 |
+| BE MR Repos | EUR | 20.94 € | 31.41 € | 41.88 € |
+| IT Casa Di Riposo | EUR | 3.40 € | 5.10 € | 6.80 € |
+| CA Choisir RPA | CAD | 10.58 | 15.87 | 21.16 |
+| CA Places Senior | CAD | 9.60 | 14.40 | 19.20 |
 | CH Heimfinder | EUR | 100 € | 200 € | 300 € |
 | FR Wikiehpad | EUR | N/A | — | — |
 
@@ -189,10 +189,10 @@ Hausse du CPC moyen du compte par rapport a la baseline.
 
 | Compte | Devise | Baseline | WARNING | CRITICAL |
 |---|---|---|---|---|
-| BE MR Repos | EUR | 1.72 € | 3 € | 4.30 € |
-| IT Casa Di Riposo | EUR | 0.53 € | 0.93 € | 1.33 € |
-| CA Choisir RPA | CAD | 1.03 | 1.80 | 2.58 |
-| CA Places Senior | CAD | 1.32 | 2.31 | 3.30 |
+| BE MR Repos | EUR | 1.62 € | 2.84 € | 4.05 € |
+| IT Casa Di Riposo | EUR | 0.524 € | 0.917 € | 1.310 € |
+| CA Choisir RPA | CAD | 0.975 | 1.706 | 2.438 |
+| CA Places Senior | CAD | 1.229 | 2.151 | 3.073 |
 | FR Wikiehpad | EUR | N/A phase collecte | — | — |
 | CH Heimfinder | EUR | N/A marche premium | pas d'alerte | pas d'alerte |
 
