@@ -367,6 +367,9 @@
   <button class="tab-btn " onclick="showTab('ch')">
     CH Heimfinder
     <span class="tab-badge badge-critical">4</span>
+  </button>
+  <button class="tab-btn " onclick="showTab('regles')" style="margin-left:auto;">
+    Règles &amp; seuils
   </button></div>
 
 <div id="tab-be" class="tab-content active">
@@ -879,6 +882,273 @@
     </div>
   </div>
 </div>
+<div id="tab-regles" class="tab-content">
+  <div class="kpi-period">12 catégories de règles · Mis à jour 2026-05-20</div>
+
+  <div class="section section-info" style="margin-bottom:24px;">
+    <div class="section-header" style="cursor:default;">
+      <span>Vue d'ensemble — 12 catégories de surveillance</span>
+    </div>
+    <div class="section-body">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#1c1f27;">
+            <th style="padding:10px 14px;text-align:left;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;letter-spacing:0.4px;border-bottom:2px solid var(--c-border);">Cat</th>
+            <th style="padding:10px 14px;text-align:left;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;letter-spacing:0.4px;border-bottom:2px solid var(--c-border);">Nom</th>
+            <th style="padding:10px 14px;text-align:left;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;letter-spacing:0.4px;border-bottom:2px solid var(--c-border);">Fenêtre</th>
+            <th style="padding:10px 14px;text-align:left;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;letter-spacing:0.4px;border-bottom:2px solid var(--c-border);">Sévérité max</th>
+            <th style="padding:10px 14px;text-align:left;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;letter-spacing:0.4px;border-bottom:2px solid var(--c-border);">Statut</th>
+            <th style="padding:10px 14px;text-align:left;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;letter-spacing:0.4px;border-bottom:2px solid var(--c-border);">Comptes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">A</td>
+            <td style="padding:10px 14px;font-weight:600;">CPL/CPA anormalement élevé</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">7j glissants</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-ok);font-weight:600;">✓ Actif</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">BE, IT, CA1, CA2, CH</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">B</td>
+            <td style="padding:10px 14px;font-weight:600;">Spend élevé et 0 conversion</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">7j glissants</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-ok);font-weight:600;">✓ Actif</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">C</td>
+            <td style="padding:10px 14px;font-weight:600;">Campagne active sans diffusion</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">Jours consécutifs</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-ok);font-weight:600;">✓ Actif</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">D</td>
+            <td style="padding:10px 14px;font-weight:600;">IS Lost Budget / IS Lost Rank</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">7j glissants</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-ok);font-weight:600;">✓ Actif</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">E</td>
+            <td style="padding:10px 14px;font-weight:600;">Search terms suspects (0 conv)</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">7j glissants</td>
+            <td style="padding:10px 14px;"><span style="background:#261500;color:var(--c-warning);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">WARNING</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-warning);font-weight:600;">⚠ Export manuel requis</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">F</td>
+            <td style="padding:10px 14px;font-weight:600;">CPC anormalement élevé</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">7j glissants</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-ok);font-weight:600;">✓ Actif</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">BE, IT, CA1, CA2</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">G</td>
+            <td style="padding:10px 14px;font-weight:600;">CTR anormalement bas</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">7j glissants</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-ok);font-weight:600;">✓ Actif</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">H</td>
+            <td style="padding:10px 14px;font-weight:600;">Structurel (apprentissage, CVR, concentration, RSA)</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">Variable</td>
+            <td style="padding:10px 14px;"><span style="background:#261500;color:var(--c-warning);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">WARNING</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-ok);font-weight:600;">✓ Actif</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);background:#0d1f1a;">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:#40c074;">I</td>
+            <td style="padding:10px 14px;font-weight:600;">Tracking fire (conversion silencieuse)</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">Jours consécutifs</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-info);font-weight:600;">⏳ Données quotidiennes requises</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);background:#0d1f1a;">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:#40c074;">J</td>
+            <td style="padding:10px 14px;font-weight:600;">Spike de spend anormal</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">Quotidien</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:var(--c-info);font-weight:600;">⏳ Données quotidiennes requises</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);background:#0d1f1a;">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:#40c074;">K</td>
+            <td style="padding:10px 14px;font-weight:600;">Écart tCPA cible vs CPL réel</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">7j glissants</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:#6b7280;font-weight:600;">🔑 API Google Ads requise</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">BE, IT, CA1, CA2</td>
+          </tr>
+          <tr style="background:#0d1f1a;">
+            <td style="padding:10px 14px;font-family:var(--font-mono);font-weight:700;color:#40c074;">L</td>
+            <td style="padding:10px 14px;font-weight:600;">Annonce refusée sans backup RSA</td>
+            <td style="padding:10px 14px;color:var(--c-text-muted);">Quotidien</td>
+            <td style="padding:10px 14px;"><span style="background:#2a1215;color:var(--c-critical);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;">CRITIQUE</span></td>
+            <td style="padding:10px 14px;"><span style="color:#6b7280;font-weight:600;">🔑 API Google Ads requise</span></td>
+            <td style="padding:10px 14px;font-size:12px;color:var(--c-text-muted);">Tous</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="padding:14px 16px;font-size:12px;color:var(--c-text-muted);border-top:1px solid var(--c-border);">
+        <span style="color:var(--c-ok);font-weight:600;">✓ Actif</span> — évalué sur ce dashboard &nbsp;·&nbsp;
+        <span style="color:var(--c-info);font-weight:600;">⏳ Données quotidiennes</span> — requiert un segment par jour (disponible via API) &nbsp;·&nbsp;
+        <span style="color:#6b7280;font-weight:600;">🔑 API</span> — activé dès approbation Google Ads Basic &nbsp;·&nbsp;
+        <span style="color:var(--c-warning);font-weight:600;">⚠ Export manuel</span> — export CSV Google Ads UI requis
+      </div>
+    </div>
+  </div>
+
+  <div class="section section-info">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span>Seuils par compte — toutes catégories</span>
+      <span class="count">cliquer pour afficher</span>
+    </div>
+    <div class="section-body" style="display:none;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr style="background:#1c1f27;">
+            <th style="padding:8px 14px;text-align:left;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;border-bottom:2px solid var(--c-border);">Cat</th>
+            <th style="padding:8px 14px;text-align:left;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;border-bottom:2px solid var(--c-border);">Métrique</th>
+            <th style="padding:8px 14px;text-align:center;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;border-bottom:2px solid var(--c-border);">BE (EUR)</th>
+            <th style="padding:8px 14px;text-align:center;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;border-bottom:2px solid var(--c-border);">IT (EUR)</th>
+            <th style="padding:8px 14px;text-align:center;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;border-bottom:2px solid var(--c-border);">CA1 (CAD)</th>
+            <th style="padding:8px 14px;text-align:center;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;border-bottom:2px solid var(--c-border);">CA2 (CAD)</th>
+            <th style="padding:8px 14px;text-align:center;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;border-bottom:2px solid var(--c-border);">FR (EUR)</th>
+            <th style="padding:8px 14px;text-align:center;font-size:11px;color:var(--c-text-muted);text-transform:uppercase;border-bottom:2px solid var(--c-border);">CH (EUR)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">A</td>
+            <td style="padding:8px 14px;">CPL baseline</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">23 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">3.48 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">10.69</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">10.79</td>
+            <td style="padding:8px 14px;text-align:center;color:var(--c-text-muted);">N/A</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">100 €*</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">A</td>
+            <td style="padding:8px 14px;">Seuil warning / critique</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">34.5 / 46 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">5.22 / 6.96 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">16 / 21.4</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">16.2 / 21.6</td>
+            <td style="padding:8px 14px;text-align:center;color:var(--c-text-muted);">—</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">200 / 300 €</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">B</td>
+            <td style="padding:8px 14px;">Spend 0 conv warning / critique</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">50 / 100 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">20 / 40 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">40 / 80</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">50 / 100</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30 / 70 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">100 / 200 €</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">D</td>
+            <td style="padding:8px 14px;">IS Lost Budget warning / critique</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">20 / 40%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">20 / 40%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">20 / 40%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">20 / 40%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30 / 50%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30 / 50%</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">D</td>
+            <td style="padding:8px 14px;">IS Lost Rank warning / critique</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30 / 50%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30 / 50%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30 / 50%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30 / 50%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">40 / 60%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">50 / 70%</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">E</td>
+            <td style="padding:8px 14px;">Search term — seuil spend</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">10 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">30</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">15 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">50 €</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">F</td>
+            <td style="padding:8px 14px;">CPC baseline / warning / critique</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">1.72 / 3 / 4.30 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">0.53 / 0.93 / 1.33 €</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">1.03 / 1.80 / 2.58</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">1.32 / 2.31 / 3.30</td>
+            <td style="padding:8px 14px;text-align:center;color:var(--c-text-muted);">N/A</td>
+            <td style="padding:8px 14px;text-align:center;color:var(--c-text-muted);">N/A</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:var(--c-critical);">G</td>
+            <td style="padding:8px 14px;">CTR warning / critique</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">&lt; 4 / 2%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">&lt; 7 / 4%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">&lt; 5 / 3%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">&lt; 5 / 3%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">&lt; 3 / 1.5%</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">&lt; 4 / 2%</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);background:#0d1a14;">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:#40c074;">I</td>
+            <td style="padding:8px 14px;">CVR fire — min conv/j + jours</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">5 conv · 2j</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">10 conv · 2j</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">3 conv · 2j</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">10 conv · 2j</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">2 conv · 3j</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">1 conv · 3j</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);background:#0d1a14;">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:#40c074;">J</td>
+            <td style="padding:8px 14px;">Spike spend — warning / critique</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);" colspan="6">x 1.5 / x 2.0 (tous comptes)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);background:#0d1a14;">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:#40c074;">K</td>
+            <td style="padding:8px 14px;">Écart tCPA/CPL — warning / critique</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">x1.3 / x1.6</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">x1.3 / x1.6</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">x1.3 / x1.6</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">x1.3 / x1.6</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">x1.5 / x2.0</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);">x1.5 / x2.0</td>
+          </tr>
+          <tr style="background:#0d1a14;">
+            <td style="padding:8px 14px;font-family:var(--font-mono);font-weight:700;color:#40c074;">L</td>
+            <td style="padding:8px 14px;">Annonce refusée</td>
+            <td style="padding:8px 14px;text-align:center;font-family:var(--font-mono);" colspan="6">0 RSA eligible dans un groupe actif → critique immédiat (tous comptes)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="padding:10px 14px;font-size:11px;color:var(--c-text-muted);border-top:1px solid var(--c-border);">
+        * CH baseline provisoire (compte lancé avril 2026) — à recalibrer fin juin 2026.
+        FR pas de baseline CPL (phase collecte).
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 function showTab(id) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
